@@ -2,6 +2,8 @@ const express = require('express')
 const mongoose = require('mongoose')
 const expressHandlebars = require('express-handlebars')
 const config = require('config')
+const todoRoutes = require('./routes/todos')
+const path = require ('path')
 
 const PORT = config.get('port') || 3000
 
@@ -13,8 +15,14 @@ const hbs = expressHandlebars.create({
 })
 
 app.engine('hbs', hbs.engine)
-app.set('view engine', hbs)
+app.set('view engine', 'hbs')
 app.set('views', 'views')
+
+app.use(express.urlencoded({extended: true}))
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.use(todoRoutes)
+
 
 async function start (){
   try{
